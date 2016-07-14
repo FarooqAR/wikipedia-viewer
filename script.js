@@ -4,10 +4,12 @@ $(document).ready(function() {
 
     });
     $('#search-input').on('keyup', toggleClear);
-    $('#search-input').on('keyup', onSubmit);
+    $('#search-input').on('submit', onSubmit);
+    $('#form').submit(onSubmit);
     $('#search-clear').on('click', clearInput);
 
-    $('.random-article-btn').on('click',getRandomArticle);
+    $('.random-article-btn').on('click', getRandomArticle);
+
     function clearInput() {
         $('#search-input').focus().val('');
         toggleClear();
@@ -63,37 +65,37 @@ $(document).ready(function() {
         $('#search-results').empty();
     }
 
-    function onSubmit(event) {
+    function onSubmit() {
         var input = $('#search-input').val();
-        if (event.keyCode === 13 && input.length > 0) {
-            showLoader();
-            $.ajax({
-                crossDomain: true,
-                dataType: 'jsonp',
-                type: 'POST',
-                url: 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=' + encodeURIComponent(input),
-                success: function(data) {
-                    var query = data['query'];
-                    clearResult();
-                    if (query == undefined) {
-                        showError('No result matches the query');
-                    } else {
 
-                        for (var i in query['pages']) {
-                            var result = query['pages'][i];
-                            console.log(result);
-                            showResult(result);
-                        }
+        showLoader();
+        $.ajax({
+            crossDomain: true,
+            dataType: 'jsonp',
+            type: 'POST',
+            url: 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=' + encodeURIComponent(input),
+            success: function(data) {
+                var query = data['query'];
+                clearResult();
+                if (query == undefined) {
+                    showError('No result matches the query');
+                } else {
+
+                    for (var i in query['pages']) {
+                        var result = query['pages'][i];
+                        console.log(result);
+                        showResult(result);
                     }
-                    hideLoader();
-                },
-                error: function() {
-                    hideLoader();
-                    clearResult();
-                    showError('An Error occurred!');
                 }
-            });
-        }
+                hideLoader();
+            },
+            error: function() {
+                hideLoader();
+                clearResult();
+                showError('An Error occurred!');
+            }
+        });
+
     }
 
     function getRandomArticle() {

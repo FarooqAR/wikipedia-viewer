@@ -95,7 +95,7 @@ $(document).ready(function() {
                 showError('An Error occurred!');
             }
         });
-
+        return false;
     }
 
     function getRandomArticle() {

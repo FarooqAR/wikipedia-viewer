@@ -83,7 +83,6 @@ $(document).ready(function() {
 
                     for (var i in query['pages']) {
                         var result = query['pages'][i];
-                        console.log(result);
                         showResult(result);
                     }
                 }
